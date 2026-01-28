@@ -272,7 +272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e162a53f5bd8ce9478ed8c22c0ae918a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSense: 0
+  mouseSense: 2
   player: {fileID: 237374370}
   playerArms: {fileID: 843225430}
 --- !u!114 &237374372
@@ -287,12 +287,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47e50b5f1c61ccd4ab73cf83d967f70c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet: {fileID: 0}
+  bullet: {fileID: 3880604521290398851, guid: da09bbd0a3ba32b408c66f37616633fd, type: 3}
   rifleStart: {fileID: 1199892121}
   HpText: {fileID: 1450386328}
   GameOver: {fileID: 1524409991}
   Victory: {fileID: 1367528455}
-  health: 0
+  health: 100
 --- !u!143 &237374373
 CharacterController:
   m_ObjectHideFlags: 0
@@ -302,7 +302,7 @@ CharacterController:
   m_GameObject: {fileID: 237374369}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Height: 3
   m_Radius: 0.5
@@ -660,7 +660,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: cabf1857eec6dd243b25ec67651631ca, type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: cabf1857eec6dd243b25ec67651631ca, type: 3}
       propertyPath: m_RootOrder
@@ -868,7 +868,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: cabf1857eec6dd243b25ec67651631ca, type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: cabf1857eec6dd243b25ec67651631ca, type: 3}
       propertyPath: m_RootOrder
@@ -1568,7 +1568,7 @@ CharacterController:
   m_GameObject: {fileID: 1393346623}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Height: 3
   m_Radius: 0.5
@@ -2172,7 +2172,7 @@ CharacterController:
   m_GameObject: {fileID: 1841188473}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Height: 3
   m_Radius: 0.5

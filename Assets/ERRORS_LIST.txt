@@ -1,0 +1,163 @@
+================================================================================
+       LISTA DE ERRORES ENCONTRADOS EN EL PROYECTO UNITY - SPACE SHOOTER
+================================================================================
+
+Proyecto: Unity Space Shooter (Prueba tecnica para tutor)
+Analisis realizado con: Claude Code (IA + Revision manual colaborativa)
+Fecha: Enero 2026
+
+================================================================================
+  ERRORES EN SCRIPTS (CODIGO C#)
+================================================================================
+
+--- ARCHIVO: Bullet.cs ---
+
+ERROR #1 - Import innecesario (Linea 1 original)
+  ORIGINAL:  using System.Security.Cryptography;
+  PROBLEMA:  Namespace de criptografia, no tiene relacion con el juego.
+             Genera dependencia innecesaria y confunde el proposito del script.
+  CORRECCION: Eliminar la linea.
+
+ERROR #2 - Bloque de colision vacio (Lineas 22-25 original)
+  ORIGINAL:  if (item.tag == "Enemy") { }
+  PROBLEMA:  Cuando la bala detecta un enemigo, no hace NADA. No destruye
+             al enemigo ni a la bala. El juego es imposible de ganar.
+  CORRECCION: Agregar logica de destruccion:
+             Destroy(item.gameObject);  // Destruye al enemigo
+             Destroy(gameObject);       // Destruye la bala
+             return;                    // Sale del loop para evitar errores
+
+--- ARCHIVO: PlayerController.cs ---
+
+ERROR #3 - Import innecesario (Linea 3 original)
+  ORIGINAL:  using System.Security.Cryptography;
+  PROBLEMA:  Mismo caso que Error #1. Namespace irrelevante.
+  CORRECCION: Eliminar la linea.
+
+ERROR #4 - Import que impide compilacion (Linea 4 original) [CRITICO]
+  ORIGINAL:  using UnityEditor;
+  PROBLEMA:  El namespace UnityEditor SOLO existe en el editor de Unity.
+             Al compilar para Windows (Build), el proyecto NO COMPILA.
+             Este es un error CRITICO que impide entregar el ejecutable.
+  CORRECCION: Eliminar la linea completamente.
+  REFERENCIA: docs.unity3d.com/ScriptReference/UnityEditor.html
+
+ERROR #5 - Vida inicial en 0 (Linea 17 original) [CRITICO]
+  ORIGINAL:  public float health = 0;
+  PROBLEMA:  El jugador comienza con 0 de vida. En Start() se llama a
+             ChangeHealth(0), que detecta health <= 0 y ejecuta Lost(),
+             mostrando Game Over INMEDIATAMENTE al iniciar.
+  CORRECCION: Cambiar a: public float health = 100;
+
+ERROR #6 - Destroy(this) en Start() (Linea 21 original) [CRITICO]
+  ORIGINAL:  Destroy(this);
+  PROBLEMA:  Destroy(this) destruye el COMPONENTE PlayerController en el
+             primer frame. El jugador no puede moverse, disparar ni
+             interactuar. El juego es completamente injugable.
+  NOTA:      Destroy(this) destruye el script/componente, NO el GameObject.
+             Si fuera Destroy(gameObject) destruiria el objeto completo.
+  CORRECCION: Eliminar esta linea. Reemplazar por la inicializacion del
+             CharacterController: characterController = GetComponent<CharacterController>();
+
+ERROR #7 - Codigo faltante: Movimiento del jugador [CODIGO FALTANTE]
+  PROBLEMA:  No existe NINGUN codigo para mover al personaje con WASD o
+             flechas del teclado. El jugador puede mirar pero no caminar.
+  CORRECCION: Agregar en Update():
+             float moveX = Input.GetAxis("Horizontal");
+             float moveZ = Input.GetAxis("Vertical");
+             Vector3 movement = transform.right * moveX + transform.forward * moveZ;
+             characterController.Move(movement * moveSpeed * Time.deltaTime);
+  NOTA:      Se usa CharacterController.Move() porque el jugador ya tiene
+             un componente CharacterController en la escena.
+
+--- ARCHIVO: PlayerLook.cs ---
+
+ERROR #8 - Variable de clamp usa eje equivocado (Linea 20 original)
+  ORIGINAL:  xAxisClamp -= rotateX;
+  PROBLEMA:  xAxisClamp controla el limite vertical de la camara (mirar
+             arriba/abajo), pero esta restando rotateX (movimiento
+             HORIZONTAL del mouse) en vez de rotateY (movimiento VERTICAL).
+             Resultado: el clamp no funciona correctamente y la camara
+             puede rotar de forma erratica al mirar arriba/abajo.
+  CORRECCION: Cambiar a: xAxisClamp -= rotateY;
+
+================================================================================
+  ERRORES EN LA ESCENA (Game.unity)
+================================================================================
+
+ERROR #9 - Sensibilidad del mouse en 0
+  UBICACION: PlayerLook component, campo "mouseSense"
+  ORIGINAL:  mouseSense: 0
+  PROBLEMA:  Con sensibilidad 0, toda la entrada del mouse se multiplica
+             por 0. La camara NO SE MUEVE. El jugador no puede mirar.
+  CORRECCION: Cambiar a: mouseSense: 2 (valor razonable)
+
+ERROR #10 - Referencia al prefab de bala no asignada [CRITICO]
+  UBICACION: PlayerController component, campo "bullet"
+  ORIGINAL:  bullet: {fileID: 0}
+  PROBLEMA:  La referencia al prefab de la bala es nula. Al hacer click
+             izquierdo, Instantiate(bullet) lanza NullReferenceException.
+             El jugador no puede disparar.
+  CORRECCION: Asignar el prefab bullet.prefab al campo en el Inspector.
+             (Corregido en la escena via referencia GUID)
+
+ERROR #11 - CharacterController del jugador desactivado [CRITICO]
+  UBICACION: Player GameObject, CharacterController component
+  ORIGINAL:  m_Enabled: 0
+  PROBLEMA:  El CharacterController esta desactivado. Sin el, el jugador
+             no tiene collider y el movimiento con Move() no funciona.
+  CORRECCION: Activar el CharacterController (m_Enabled: 1)
+
+ERROR #12 - Enemy (1) sin tag "Enemy"
+  UBICACION: Enemy (1) PrefabInstance, m_TagString
+  ORIGINAL:  value: Untagged
+  PROBLEMA:  Sin el tag "Enemy", las balas no reconocen a este enemigo.
+             No se puede destruir con disparos ni por contacto cercano.
+             Solo 1 de 3 enemigos era detectable.
+  CORRECCION: Cambiar tag a "Enemy"
+
+ERROR #13 - Enemy (2) sin tag "Enemy"
+  UBICACION: Enemy (2) PrefabInstance, m_TagString
+  ORIGINAL:  value: Untagged
+  PROBLEMA:  Mismo caso que Error #12. Este enemigo tambien es invisible
+             al sistema de deteccion.
+  CORRECCION: Cambiar tag a "Enemy"
+
+ERROR #14 - CharacterController de Enemy desactivado
+  UBICACION: Enemy GameObject (original), CharacterController component
+  ORIGINAL:  m_Enabled: 0
+  PROBLEMA:  El CharacterController sirve como Collider para el enemigo.
+             Si esta desactivado, Physics.OverlapSphere no lo detecta.
+  CORRECCION: Activar el CharacterController (m_Enabled: 1)
+
+ERROR #15 - CharacterController de Enemy (2) desactivado
+  UBICACION: Enemy (2) GameObject, CharacterController component
+  ORIGINAL:  m_Enabled: 0
+  PROBLEMA:  Mismo caso que Error #14.
+  CORRECCION: Activar el CharacterController (m_Enabled: 1)
+
+================================================================================
+  RESUMEN
+================================================================================
+
+Total de errores encontrados: 15
+  - Errores en Bullet.cs:          2 (1 import, 1 logica faltante)
+  - Errores en PlayerController.cs: 5 (2 imports, 1 valor, 1 destruccion, 1 codigo faltante)
+  - Errores en PlayerLook.cs:       1 (variable incorrecta)
+  - Errores en Game.unity:          7 (1 sensibilidad, 1 referencia, 3 colliders, 2 tags)
+
+Errores criticos (impiden jugar): 6 (#4, #5, #6, #7, #10, #11)
+Errores graves (impiden ganar):   4 (#2, #12, #13, #14/#15)
+Errores menores:                  5 (#1, #3, #8, #9)
+
+================================================================================
+  VERIFICACION FUNCIONAL POST-CORRECCION
+================================================================================
+
+[x] Puedes mover al personaje (WASD + CharacterController)
+[x] Puedes controlar la camara (Mouse + sensibilidad corregida + clamp fix)
+[x] Al pulsar boton izquierdo se lanza el proyectil (bullet prefab asignado)
+[x] Al colisionar con el alienigena, se destruye bala y alienigena
+[x] Puedes eliminar a los tres enemigos (3 enemigos con tag "Enemy" + colliders)
+
+================================================================================

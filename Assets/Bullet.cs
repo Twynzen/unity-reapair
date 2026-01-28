@@ -1,4 +1,3 @@
-using System.Security.Cryptography;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -21,7 +20,9 @@ public class Bullet : MonoBehaviour
         {
             if (item.tag == "Enemy")
             {
-
+                Destroy(item.gameObject);
+                Destroy(gameObject);
+                return;
             }
         }
     }

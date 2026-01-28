@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,11 +12,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject GameOver;
     [SerializeField] private GameObject Victory;
 
-    public float health = 0;
+    [SerializeField] private float moveSpeed = 5f;
+
+    public float health = 100;
+
+    private CharacterController characterController;
 
     void Start()
     {
-        Destroy(this);
+        characterController = GetComponent<CharacterController>();
         ChangeHealth(0);
     }
 
@@ -52,6 +54,21 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        // Player movement (WASD / Arrow keys)
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
+        Vector3 movement = transform.right * moveX + transform.forward * moveZ;
+
+        if (characterController != null)
+        {
+            characterController.Move(movement * moveSpeed * Time.deltaTime);
+        }
+        else
+        {
+            transform.position += movement * moveSpeed * Time.deltaTime;
+        }
+
+        // Shoot projectile on left mouse button
         if (Input.GetMouseButtonDown(0))
         {
             GameObject buf = Instantiate(bullet);
@@ -59,7 +76,7 @@ public class PlayerController : MonoBehaviour
             buf.GetComponent<Bullet>().setDirection(transform.forward);
             buf.transform.rotation = transform.rotation;
         }
-        
+
         if (Input.GetMouseButtonDown(1))
         {
             Collider[] tar = Physics.OverlapSphere(transform.position, 2);
