@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!129 &1
+PlayerSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 22
+  productGUID: 8e00d85e1f4b4444a8c7c5c3b6d5e6f7
+  productName: SpaceShooter
+  companyName: DefaultCompany
+  defaultCursor: {fileID: 0}
+  cursorHotspot: {x: 0, y: 0}
+  defaultScreenWidth: 1920
+  defaultScreenHeight: 1080
+  defaultScreenWidthWeb: 960
+  defaultScreenHeightWeb: 600
+  defaultIsNativeResolution: 1
+  runInBackground: 1
+  captureSingleScreen: 0
+  muteOtherAudioSources: 0
+  displayResolutionDialog: 0
+  allowedAutorotateToPortrait: 1
+  allowedAutorotateToPortraitUpsideDown: 1
+  allowedAutorotateToLandscapeRight: 1
+  allowedAutorotateToLandscapeLeft: 1
+  defaultIsFullScreen: 0
+  fullScreenMode: 1
+  usePlayerLog: 1
+  apiCompatibilityLevel: 6
+  activeInputHandler: 0
+  scriptingRuntimeVersion: 1
+  scriptingBackend:
+    Standalone: 1
+  targetArchitecture: 0
