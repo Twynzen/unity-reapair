@@ -17,7 +17,7 @@ public class PlayerLook : MonoBehaviour
         float rotateX = Input.GetAxis("Mouse X") * mouseSense;
         float rotateY = Input.GetAxis("Mouse Y") * mouseSense;
 
-        xAxisClamp -= rotateX;
+        xAxisClamp -= rotateY;
 
         Vector3 rotPlayerArms = playerArms.rotation.eulerAngles;
         Vector3 rotPlayer = player.rotation.eulerAngles;
